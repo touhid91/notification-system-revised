@@ -3,35 +3,43 @@
 
     var module = angular.module("app.notification", NotificationManager);
 
-    NotificationManager.$inject = ["InMemoryStorage", "SignalR", "TopicGenerator", "topicGeneratorModelNormalizer"];
+    NotificationManager.$inject = [
+        "InMemoryStorage",
+        "SignalR",
+        "TopicGenerator",
+        "topicGeneratorModelNormalizer"
+    ];
 
-    function NotificationManager(InMemoryStorage, SignalR, TopicGenerator, topicGeneratorModelNormalizer) {
+    function NotificationManager(
+        InMemoryStorage,
+        SignalR,
+        TopicGenerator,
+        topicGeneratorModelNormalizer) {
 
         /**
          * @constructor
          * @author touhid.alam <tua@selise.ch>
          * @param  {string}    serviceEndPoint [description]
-         * @param  {string}    hub             [description]
-         * @param  {object}    action          [description]
-         * @param  {Array}    weight          [description]
-         * @param  {function}    formatProvider  [description]
+         * @param  {object}    config          [description]
          */
-        var constructor = function (serviceEndPoint, hub, action, weight, formatProvider) {
+        var constructor = function (serviceEndPoint, config) {
             if (!serviceEndPoint)
                 throw "{NotificationManager.constructor} undefined serviceEndPoint";
-            if (!hub)
-                throw "{NotificationManager.constructor} undefined hub";
-            if (!action)
-                throw "{NotificationManager.constructor} undefined action";
-            if (!action.subscribe || !action.unsubscribe)
-                throw "{NotificationManager.constructor} illegal action";
-            if ("function" === typeof weight) {
-                this.formatProvider = weight;
+            if (!config)
+                throw "{NotificationManager.constructor} undefined config";
+            if (!config.hub)
+                throw "{NotificationManager.constructor} undefined hub in config";
+            if (!config.remoteActionMap)
+                throw "{NotificationManager.constructor} undefined remoteActionMap in config";
+            if (!config.remoteActionMap.subscribe || !config.remoteActionMap.unsubscribe)
+                throw "{NotificationManager.constructor} illegal remoteActionMap in config";
+            if ("function" === typeof config.weight) {
+                this.formatProvider = config.weight;
                 this.weight = undefined;
             }
-            if (formatProvider)
-                if (!formatProvider.incoming || "function" !== typeof formatProvider.incoming || !formatProvider.outgoing || "function" !== typeof formatProvider.outgoing)
-                    throw "{NotificationManager.constructor} illegal formatProvider. undefined incoming and outgoing functions"
+            if (config.formatProvider)
+                if (!config.formatProvider.incoming || !config.formatProvider.outgoing || "function" !== typeof config.formatProvider.incoming || "function" !== typeof config.formatProvider.outgoing)
+                    throw "{NotificationManager.constructor} illegal formatProvider in config. undefined incoming and outgoing functions"
                 else this.formatProvider = formatProvider;
             else this.formatProvider = {
                 incoming: function (data) {
@@ -42,7 +50,7 @@
                 }
             };
 
-            this.signalr = new SignalR(serviceEndPoint, hub);
+            this.signalr = new SignalR(serviceEndPoint, config.hub);
             this.storage = new InMemoryStorage(CONSANT.SEPERATOR);
             this.topicGenerator = new TopicGenerator(CONSANT.SEPERATOR);
         };
@@ -59,7 +67,7 @@
 
                         for (var i = 0; i < Object.keys(callbacks).length; i++)
                             callbacks[Object.keys[i]].apply(this);
-														
+
                     }.bind(this);
                 }.bind(this))
         };
@@ -84,7 +92,7 @@
             var subscriptionToken = [topic, timestamp].join(CONSANT.SEPERATOR[0]);
 
             this.storage.write(subscriptionToken, callback);
-            this.signalr.invoke(this.action.subscribe, formatProvider.outgoing(model));
+            this.signalr.invoke(this.remoteActionMap.subscribe, formatProvider.outgoing(model));
             this.storage.write(timestamp, formatProvider.outgoing(model));
         };
 
@@ -100,7 +108,7 @@
                 throw "{NotificationManager.subscribe} undefined subscriptionToken";
 
             this.storage.prune(subscriptionToken);
-            this.signalr.invoke(this.action.unsubscribe, this.storage.read(subscriptionToken));
+            this.signalr.invoke(this.remoteActionMap.unsubscribe, this.storage.read(subscriptionToken));
         };
 
         return constructor;
