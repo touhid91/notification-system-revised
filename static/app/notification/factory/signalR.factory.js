@@ -4,9 +4,18 @@
 
     module.factory("SignalR", SignalR);
 
-    SignalR.$inject = ["$http", "$q", "urlHelper"];
+    SignalR.$inject = [
+        "$http",
+        "$q",
+        "signalRMessageTranslator",
+        "urlHelper"
+    ];
 
-    function SignalR($http, $q, urlHelper) {
+    function SignalR(
+        $http,
+        $q,
+        signalRMessageTranslator,
+        urlHelper) {
         /**
          * @constructor
          * @author touhid.alam <tua@selise.ch>
@@ -15,9 +24,9 @@
          */
         var constructor = function (serviceEndPoint, hub) {
             if (!serviceEndPoint)
-                throw "{app.notification.SignalR.constructor} undefined serviceEndPoint";
+                throw "{SignalR.constructor} undefined serviceEndPoint";
             if (!hub)
-                throw "{app.notification.SignalR.constructor} undefined hub";
+                throw "{SignalR.constructor} undefined hub";
 
             this.serviceEndPoint = serviceEndPoint.endsWith("/") ? serviceEndPoint.slice(0, -1) : serviceEndPoint;
             this.queries = {
@@ -68,26 +77,26 @@
 
             this.webSocket = new WebSocket(url, protocol);
 
-						return this;
+            return this;
         };
 
-				/**
-				 * invokes an action defined on server with the specified message as parameter
-				 * @method invoke
-				 * @author touhid.alam <tua@selise.ch>
-				 * @param  {string} action  [description]
-				 * @param  {object} message [description]
-				 * @return {SignalR}         [description]
-				 */
+        /**
+         * invokes an action defined on server with the specified message as parameter
+         * @method invoke
+         * @author touhid.alam <tua@selise.ch>
+         * @param  {string} action  [description]
+         * @param  {object} message [description]
+         * @return {SignalR}         [description]
+         */
         constructor.prototype.invoke = function (action, message) {
             if (!action)
-                throw "{app.notification.SignalR.invoke} undefined action";
+                throw "{SignalR.invoke} undefined action";
             if (!this.webSocket)
-                throw "{app.notification.SignalR.invoke} WebSocket not initialized. Make sure you negotiate before trying to connect";
+                throw "{SignalR.invoke} WebSocket not initialized. Make sure you negotiate before trying to connect";
 
             this.webSocket.send(signalRMessageTranslator.serialize(this.hub, action, message));
 
-						return this;
+            return this;
         };
     }
 }).apply(this);

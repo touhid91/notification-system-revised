@@ -1,7 +1,7 @@
 (function () {
     "use strict";
 
-    var module = angular.module("app.core");
+    var module = angular.module("app.notification");
 
     module.service("urlHelper", constructor);
 
