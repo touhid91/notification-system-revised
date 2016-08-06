@@ -16,10 +16,10 @@
          */
         var constructor = function (seperator) {
             if (!seperator)
-                throw "{InMemoryStorage} undefined seperator";
+                throw "{InMemorymemory} undefined seperator";
 
             this.seperator = seperator;
-            this.storage = {};
+            this.memory = {};
         };
 
         /**
@@ -32,7 +32,7 @@
         constructor.prototype.read = function (location) {
             return this.worker.read(
                 location.split(this.seperator[0]),
-                this.storage);
+                this.memory);
         };
 
         /**
@@ -46,7 +46,7 @@
         constructor.prototype.write = function (location, value) {
             return this.worker.write(
                 location.split(this.seperator[0]),
-                this.storage,
+                this.memory,
                 value);
         };
 
@@ -59,25 +59,25 @@
          */
         constructor.prototype.prune = function (location) {
             if (location.indexOf(this.seperator[0]) === -1)
-                throw "{InMemoryStorage} removing root directory is not allowed";
+                throw "{InMemorymemory} removing root directory is not allowed";
 
             var parent = location.substring(0, location.lastIndexOf(this.seperator[0])),
                 tail = location.slice(location.lastIndexOf(this.seperator[0]) + 1);
 
-            return this.worker.prune(parent.split(this.seperator[0]), tail, this.storage);
+            return this.worker.prune(parent.split(this.seperator[0]), tail, this.memory);
         };
 
         constructor.prototype.worker = {
-            read: function (keys, storage) {
+            read: function (keys, memory) {
                 if (undefined === keys[0] || "" === keys[0])
-                    return storage;
+                    return memory;
 
                 return this.read(
                     keys.slice(1),
-                    storage[keys[0]]);
+                    memory[keys[0]]);
             },
-            write: function (keys, storage, value) {
-                storage = null === storage || "number" === typeof storage && {} || storage || {};
+            write: function (keys, memory, value) {
+                memory = null === memory || "number" === typeof memory && {} || memory || {};
 
                 if (undefined === keys[0] || "" === keys[0])
                     return value;
@@ -86,21 +86,21 @@
                     var siblings = keys[0].split(this.divider[1]);
                     for (var i = 0; i < siblings.length; i++) {
                         keys[0] = siblings[i];
-                        storage[keys[0]] = this.write(
+                        memory[keys[0]] = this.write(
                             keys.slice(1),
-                            storage[keys[0]],
+                            memory[keys[0]],
                             value);
                     }
-                } else storage[keys[0]] = this.write(
+                } else memory[keys[0]] = this.write(
                     keys.slice(1),
-                    storage[keys[0]],
+                    memory[keys[0]],
                     value);
 
-                return storage;
+                return memory;
             },
-            prune: function (keys, tail, storage) {
+            prune: function (keys, tail, memory) {
                 if (undefined === keys[0] || "" === keys[0])
-                    return delete storage[tail];
+                    return delete memory[tail];
 
                 if (keys[0].indexOf(this.divider[1]) > -1) {
                     var siblings = keys[0].split(this.divider[1]);
@@ -110,14 +110,14 @@
                         this.prune(
                             keys.slice(1),
                             tail,
-                            storage[keys[0]]);
+                            memory[keys[0]]);
                     }
                 }
 
                 return this.prune(
                     keys.slice(1),
                     tail,
-                    storage[keys[0]]);
+                    memory[keys[0]]);
             }
         };
 

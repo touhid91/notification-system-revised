@@ -59,7 +59,7 @@
                 for (var i = 0; i < keys.length; i++)
                     this.queries[keys[i]] = response.data[keys[i]];
 
-                deferral.resolve();
+                deferral.resolve(this);
             }
         };
 
