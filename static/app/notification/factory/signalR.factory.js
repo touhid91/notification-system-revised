@@ -98,5 +98,7 @@
 
             return this;
         };
+
+				return constructor;
     }
 }).apply(this);

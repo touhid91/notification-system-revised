@@ -9,7 +9,7 @@
 
     function constructor(enm) {
 
-        enm.initialize().then(function () {
+        enm.notificationManager.initialize().then(function () {
             var topic = enm.subscribeAll("person", "create", function () {
                 console.log("person updated");
             });

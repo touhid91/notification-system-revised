@@ -1,22 +1,24 @@
 (function () {
     "use strict";
 
-    var module = angular.module("app.notification", NotificationManager);
+    var module = angular.module("app.notification");
+
+    module.factory("NotificationManager", NotificationManager);
 
     NotificationManager.$inject = [
         "$q",
+        "CONSTANT",
         "InMemoryStorage",
         "SignalR",
-        "TopicGenerator",
-        "topicGeneratorModelNormalizer"
+        "TopicGenerator"
     ];
 
     function NotificationManager(
         $q,
+        CONSTANT,
         InMemoryStorage,
         SignalR,
-        TopicGenerator,
-        topicGeneratorModelNormalizer) {
+        TopicGenerator) {
 
         /**
          * @constructor
@@ -42,7 +44,7 @@
             if (config.formatProvider)
                 if (!config.formatProvider.incoming || !config.formatProvider.outgoing || "function" !== typeof config.formatProvider.incoming || "function" !== typeof config.formatProvider.outgoing)
                     throw "{NotificationManager.constructor} illegal formatProvider in config. undefined incoming and outgoing functions"
-                else this.formatProvider = formatProvider;
+                else this.formatProvider = config.formatProvider;
             else this.formatProvider = {
                 incoming: function (data) {
                     return data;
@@ -53,8 +55,8 @@
             };
 
             this.signalr = new SignalR(serviceEndPoint, config.hub);
-            this.storage = new InMemoryStorage(CONSANT.SEPERATOR);
-            this.topicGenerator = new TopicGenerator(CONSANT.SEPERATOR);
+            this.storage = new InMemoryStorage(CONSTANT.SEPERATOR);
+            this.topicGenerator = new TopicGenerator(CONSTANT.SEPERATOR);
             this.deferral = $q.defer();
             this.ready = false;
         };
@@ -78,7 +80,9 @@
                     }.bind(this);
                     this.ready = true;
                     this.deferral.resolve();
-                }.bind(this))
+                }.bind(this));
+
+            this.deferral.promise;
         };
 
         /**

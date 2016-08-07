@@ -8,7 +8,7 @@
     constructor.$inject = ["ecapNotificationManagerHelper"];
 
     function constructor(ecapNotificationManagerHelper) {
-        this.notificationManager = ecapNotificationManagerHelper.createNotificationManager.apply(this);
+        this.notificationManager = ecapNotificationManagerHelper.createNotificationManager();
 
         this.subscribeAll = function (context, action, callback) {
             return this.notificationManager.subscribe({

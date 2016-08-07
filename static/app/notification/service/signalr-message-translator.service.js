@@ -1,5 +1,7 @@
 (function () {
 
+    "use strict";
+
     var module = angular.module("app.notification");
 
     module.service("signalRMessageTranslator", constructor);

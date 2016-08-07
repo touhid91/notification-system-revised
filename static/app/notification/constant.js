@@ -4,7 +4,7 @@
     var module = angular.module("app.notification");
 
     module.constant("CONSTANT", {
-        SEPERATOR: [">", "+"]
+        "SEPERATOR": [">", "+"]
     });
 
 }).apply(this);

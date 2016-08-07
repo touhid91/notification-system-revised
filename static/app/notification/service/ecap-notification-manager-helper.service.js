@@ -5,9 +5,9 @@
 
     module.service("ecapNotificationManagerHelper", constructor);
 
-    constructor.$inject = [];
+    constructor.$inject = ["NotificationManager"];
 
-    function constructor() {
+    function constructor(NotificationManager) {
         this.hub = "NotifierServerHub";
         this.remoteActionMap = {
             subscribe: "Subscribe",
@@ -57,7 +57,7 @@
             return new NotificationManager("http://172.16.0.223/Selise.AppSuite.Notifier.NotifierServer", {
                 hub: this.hub,
                 remoteActionMap: this.remoteActionMap,
-                weight: weight,
+                weight: this.weight,
                 formatProvider: {
                     incoming: function (message) {
                         return message;
