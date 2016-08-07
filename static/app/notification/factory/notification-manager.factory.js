@@ -77,14 +77,12 @@
                 .negotiate()
                 .then(function () {
                     this.signalr.connect();
+                    
                     this.signalr.webSocket.onmessage = function (event) {
-                        if (event.data === "{}")
+                        if (event.data === "{}" || JSON.parse(event.data).M.length < 1)
                             return;
 
                         var model = this.config.formatProvider.incoming(signalRMessageTranslator.deserialize(event.data));
-
-                        if (!model.hub)
-                            return;
 
                         var topic = this.topicGenerator.generate(this.topicGenerator.normalize(model, this.weight));
                         var callbacks = this.storage.read(topic);
@@ -96,14 +94,10 @@
 
                     }.bind(this);
 
-                    var eid = $interval(function () {
-                        if (this.signalr.webSocket.readyState === 1) {
-                            this.ready = true;
-                            $interval.cancel(eid);
-                            this.deferral.resolve();
-                        }
-                        console.info(this.signalr.webSocket.readyState);
-                    }.bind(this));
+                    this.signalr.webSocket.onopen = function () {
+                        this.ready = true;
+                        this.deferral.resolve();
+                    }.bind(this);
 
                 }.bind(this));
 

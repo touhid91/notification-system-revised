@@ -14,6 +14,16 @@
             unsubscribe: "Unsubscribe"
         };
         this.weight = ["context", "id", "action"];
+
+        this.incomingFormatProvider = function (model) {
+            debugger;
+            var notificationTypes = {
+                all: "BroadcastReceiverType",
+                filterSpecific: "FilterSpecificReceiverType",
+                userSpecific: "UserSpecificReceiverType"
+            };
+        };
+
         this.outgoingFormatProvider = function (model) {
             var aoo = [];
 
@@ -64,9 +74,7 @@
                 remoteActionMap: this.remoteActionMap,
                 weight: this.weight,
                 formatProvider: {
-                    incoming: function (message) {
-                        return message;
-                    },
+                    incoming: this.incomingFormatProvider,
                     outgoing: this.outgoingFormatProvider
                 }
             });

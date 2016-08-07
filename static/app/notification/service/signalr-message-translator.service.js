@@ -28,10 +28,12 @@
         };
 
         this.deserialize = function (message) {
+            var data = JSON.parse(message).M[0];
+
             return {
-                action: message.A,
-                hub: message.H,
-                message: message.M
+                action: data.A,
+                hub: data.H,
+                message: data.M
             };
         };
     }
