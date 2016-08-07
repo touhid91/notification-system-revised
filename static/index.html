@@ -2,7 +2,36 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title></title>
+        <title>ECAP Notification System</title>
     </head>
-    <body></body>
+    <body>
+        <div ng-app="app">
+            <div ng-controller="ClientCtrl"></div>
+        </div>
+				
+        <script src="angular.min.js"></script>
+
+        <!-- app -->
+        <script src="app/app.js"></script>
+
+        <!-- app.client -->
+        <script src="app/client/client.js"></script>
+        <script src="app/client/controller/client.controller.js"></script>
+
+        <!-- app.notification -->
+        <script src="app/notification/notification.js"></script>
+        <script src="app/notification/constant.js"></script>
+
+        <script src="app/notification/factory/in-memory-storage.factory.js"></script>
+        <script src="app/notification/factory/notification-manager.factory.js"></script>
+        <script src="app/notification/factory/signalR.factory.js"></script>
+        <script src="app/notification/factory/topic-generator.factory.js"></script>
+
+        <script src="app/notification/service/ecap-notification-manager-helper.service.js"></script>
+        <script src="app/notification/service/ecap-notification-manager.service.js"></script>
+        <script src="app/notification/service/signalr-message-translator.service.js"></script>
+        <script src="app/notification/service/url-helper.service.js"></script>
+
+    </body>
+
 </html>

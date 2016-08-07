@@ -4,6 +4,7 @@
     var module = angular.module("app.notification", NotificationManager);
 
     NotificationManager.$inject = [
+        "$q",
         "InMemoryStorage",
         "SignalR",
         "TopicGenerator",
@@ -11,6 +12,7 @@
     ];
 
     function NotificationManager(
+        $q,
         InMemoryStorage,
         SignalR,
         TopicGenerator,
@@ -53,10 +55,15 @@
             this.signalr = new SignalR(serviceEndPoint, config.hub);
             this.storage = new InMemoryStorage(CONSANT.SEPERATOR);
             this.topicGenerator = new TopicGenerator(CONSANT.SEPERATOR);
+            this.deferral = $q.defer();
+            this.ready = false;
         };
 
         constructor.prototype.initialize = function () {
-            return this.signalr
+            if (this.ready)
+                this.deferral.resolve();
+
+            this.signalr
                 .negotiate()
                 .then(function () {
                     this.signalr.connect(13);
@@ -69,6 +76,8 @@
                             callbacks[Object.keys[i]].apply(this);
 
                     }.bind(this);
+                    this.ready = true;
+                    this.deferral.resolve();
                 }.bind(this))
         };
 

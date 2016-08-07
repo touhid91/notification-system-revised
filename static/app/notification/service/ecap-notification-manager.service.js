@@ -1,7 +1,9 @@
 (function () {
     "use strict";
 
-    var module = angular.module("app.notification", constructor);
+    var module = angular.module("app.notification");
+
+    module.service("ecapNotificationManager", constructor);
 
     constructor.$inject = ["ecapNotificationManagerHelper"];
 
