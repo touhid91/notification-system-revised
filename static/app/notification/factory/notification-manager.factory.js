@@ -6,18 +6,22 @@
     module.factory("NotificationManager", NotificationManager);
 
     NotificationManager.$inject = [
+        "$interval",
         "$q",
         "CONSTANT",
         "InMemoryStorage",
         "SignalR",
+        "signalRMessageTranslator",
         "TopicGenerator"
     ];
 
     function NotificationManager(
+        $interval,
         $q,
         CONSTANT,
         InMemoryStorage,
         SignalR,
+        signalRMessageTranslator,
         TopicGenerator) {
         /**
          * @constructor
@@ -74,18 +78,33 @@
                 .then(function () {
                     this.signalr.connect();
                     this.signalr.webSocket.onmessage = function (event) {
+                        if (event.data === "{}")
+                            return;
+
                         var model = this.config.formatProvider.incoming(signalRMessageTranslator.deserialize(event.data));
+
+                        if (!model.hub)
+                            return;
+
                         var topic = this.topicGenerator.generate(this.topicGenerator.normalize(model, this.weight));
                         var callbacks = this.storage.read(topic);
 
                         //TODO invoke callback with model generated from event.data
-                        for (var i = 0; i < Object.keys(callbacks)
-                            .length; i++)
-                            callbacks[Object.keys[i]]();
+                        var keys = Object.keys(callbacks);
+                        for (var i = 0; i < keys.length; i++)
+                            callbacks[keys[i]]();
 
                     }.bind(this);
-                    this.ready = true;
-                    this.deferral.resolve();
+
+                    var eid = $interval(function () {
+                        if (this.signalr.webSocket.readyState === 1) {
+                            this.ready = true;
+                            $interval.cancel(eid);
+                            this.deferral.resolve();
+                        }
+                        console.info(this.signalr.webSocket.readyState);
+                    }.bind(this));
+
                 }.bind(this));
 
             return this.deferral.promise;
