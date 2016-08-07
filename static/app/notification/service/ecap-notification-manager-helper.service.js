@@ -18,8 +18,15 @@
             var aoo = [];
 
             if (!model.id)
-                aoo.push({
-                    "Context": model.context
+                if (model.action && model.action.length > 0)
+                    for (var j = 0; j < model.action.length; j++)
+                        aoo.push({
+                            "Context": model.context,
+                            "ActionName": model.action[j]
+                        });
+
+                else aoo.push({
+                    "Context": model.context,
                 });
             else if ("string" === typeof model.id || "number" === typeof model.id)
                 if (model.action && model.action.length > 0)
@@ -82,7 +89,9 @@
             else if (Array.isArray(action))
                 model = action.filter(function (value, index, self) {
                     return /*unique*/ index === self.indexOf(value) && /*accepted*/ this.acceptedActions.indexOf(value) > -1;
-                }.bind(this)).sort().map(function (value) {
+                }.bind(this))
+                .sort()
+                .map(function (value) {
                     return value.toLowerCase()
                 });
             else model = acceptedActions;
@@ -91,4 +100,5 @@
         };
     }
 
-}).apply(this);
+})
+.apply(this);

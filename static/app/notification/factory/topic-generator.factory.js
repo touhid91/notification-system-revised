@@ -20,7 +20,7 @@
             this.seperator = seperator;
         };
         /**
-         * generates an aggregate topic based on model
+         *
          * @author touhid.alam <tua@selise.ch>
          * @param  {Array} model [description]
          * @return {string} [description]
@@ -45,16 +45,17 @@
          * @param  {Array} weight [description]
          * @return {object} [description]
          */
-        this.normalize = function (model, weight) {
+        constructor.prototype.normalize = function (model, weight) {
             var normalizedModel = [];
 
             if (weight)
                 for (var i = 0; i < weight.length; i++)
                     normalizedModel.push(model[weight[i]]);
-            else
-                for (var i = 0; i < Object.keys(model)
-                    .length; i++)
-                    normalizedModel.push(Object.keys(model[i]));
+            else {
+                var keys = Object.keys(model);
+                for (var i = 0; i < keys.length; i++)
+                    normalizedModel.push(model[keys[i]]);
+            }
 
             return normalizedModel;
         };

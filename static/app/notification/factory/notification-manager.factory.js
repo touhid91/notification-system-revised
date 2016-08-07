@@ -40,11 +40,10 @@
                 this.formatProvider = config.weight;
                 this.weight = undefined;
             }
-            if (config.formatProvider)
+            if (config.formatProvider) {
                 if (!config.formatProvider.incoming || !config.formatProvider.outgoing || "function" !== typeof config.formatProvider.incoming || "function" !== typeof config.formatProvider.outgoing)
-                    throw "{NotificationManager.constructor} illegal formatProvider in config. undefined incoming and outgoing functions"
-                else this.formatProvider = config.formatProvider;
-            else this.formatProvider = {
+                    throw "{NotificationManager.constructor} illegal formatProvider in config. undefined incoming and outgoing functions";
+            } else config.formatProvider = {
                 incoming: function (data) {
                     return data;
                 },
@@ -56,6 +55,7 @@
             this.signalr = new SignalR(serviceEndPoint, config.hub);
             this.storage = new InMemoryStorage(CONSTANT.SEPERATOR);
             this.topicGenerator = new TopicGenerator(CONSTANT.SEPERATOR);
+            this.config = config;
             this.deferral = $q.defer();
             this.ready = false;
         };
@@ -74,12 +74,13 @@
                 .then(function () {
                     this.signalr.connect();
                     this.signalr.webSocket.onmessage = function (event) {
-                        var model = this.formatProvider.incoming(signalRMessageTranslator.deserialize(event.data));
+                        var model = this.config.formatProvider.incoming(signalRMessageTranslator.deserialize(event.data));
                         var topic = this.topicGenerator.generate(this.topicGenerator.normalize(model, this.weight));
                         var callbacks = this.storage.read(topic);
 
                         //TODO invoke callback with model generated from event.data
-                        for (var i = 0; i < Object.keys(callbacks).length; i++)
+                        for (var i = 0; i < Object.keys(callbacks)
+                            .length; i++)
                             callbacks[Object.keys[i]]();
 
                     }.bind(this);
@@ -105,11 +106,11 @@
             var topic = this.topicGenerator.generate(this.topicGenerator.normalize(model, this.weight));
             var timestamp = Date.now();
 
-            var subscriptionToken = [topic, timestamp].join(CONSANT.SEPERATOR[0]);
+            var subscriptionToken = [topic, timestamp].join(CONSTANT.SEPERATOR[0]);
 
             this.storage.write(subscriptionToken, callback);
-            this.signalr.invoke(this.remoteActionMap.subscribe, formatProvider.outgoing(model));
-            this.storage.write(timestamp, formatProvider.outgoing(model));
+            this.signalr.invoke(this.config.remoteActionMap.subscribe, this.config.formatProvider.outgoing(model));
+            this.storage.write(timestamp, this.config.formatProvider.outgoing(model));
 
             return subscriptionToken;
         };
@@ -124,7 +125,8 @@
                 throw "{NotificationManager.subscribe} undefined subscriptionToken";
 
             this.storage.prune(subscriptionToken);
-            this.signalr.invoke(this.remoteActionMap.unsubscribe, this.storage.read(subscriptionToken));
+            var timestamp = subscriptionToken.slice(subscriptionToken.lastIndexOf(">") + 1);
+            this.signalr.invoke(this.config.remoteActionMap.unsubscribe, this.storage.read(timestamp));
         };
 
         return constructor;

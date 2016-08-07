@@ -29,6 +29,8 @@
                 throw "{SignalR.constructor} undefined hub";
 
             this.serviceEndPoint = serviceEndPoint.endsWith("/") ? serviceEndPoint.slice(0, -1) : serviceEndPoint;
+            this.hub = hub;
+            
             //TODO Authorization
             this.queries = {
                 Authorization: "bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0ZW5hbnRfaWQiOiIyMDBERTc5Qi1EQ0NELTQ5NjUtQkM5My0wQTZBOEU2QUUzNTUiLCJzdWIiOiI3YmZkYzU1NC0zYzMzLTRhNDAtYTA2OC05NThlMTVlMDNlOWUiLCJzaXRlX2lkIjoiRUU3ODU5MkQtNTI3Qy00NDhBLTlCNjQtRThDNzI3MUNDMDA4Iiwib3JpZ2luIjoiZGV2LnNlbGlzZS5iaXoiLCJzZXNzaW9uX2lkIjoiODBlMmU5MzI4M2QwNDZlNDlhMDg4MzY4YThhNWNkY2EiLCJ1c2VyX2lkIjoiN2JmZGM1NTQtM2MzMy00YTQwLWEwNjgtOTU4ZTE1ZTAzZTllIiwiZGlzcGxheV9uYW1lIjoiTWQuIEFidWwgS2FzaW0iLCJzaXRlX25hbWUiOiJKYW1haG9vayBUZWFtIiwidXNlcl9uYW1lIjoiYWJ1bC5rYXNpbUBzZWxpc2UuY2giLCJ1bmlxdWVfbmFtZSI6IjdiZmRjNTU0LTNjMzMtNGE0MC1hMDY4LTk1OGUxNWUwM2U5ZSIsInJvbGUiOlsiYXBwdXNlciIsImFwcHVzZXIiXSwiaXNzIjoiaHR0cDovL3NlbGlzZS5jaCIsImF1ZCI6IioiLCJleHAiOjE0NzI4MjA2MTIsIm5iZiI6MTQ3MDIyODYxMn0.8v3-BBN_Z-DKk3yMg-mzlsloOjtswe-2-J78oMY4CzA",
@@ -92,7 +94,7 @@
             if (!this.webSocket)
                 throw "{SignalR.invoke} WebSocket not initialized. Make sure you negotiate before trying to connect";
 
-            this.webSocket.send(signalRMessageTranslator.serialize(this.hub, action, message));
+            this.webSocket.send(JSON.stringify(signalRMessageTranslator.serialize(this.hub, action, message)));
 
             return this;
         };
