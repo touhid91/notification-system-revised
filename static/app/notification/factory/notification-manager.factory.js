@@ -82,7 +82,7 @@
                     this.deferral.resolve();
                 }.bind(this));
 
-            this.deferral.promise;
+            return this.deferral.promise;
         };
 
         /**
