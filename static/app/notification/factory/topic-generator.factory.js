@@ -1,4 +1,4 @@
-(function() {
+(function () {
     "use strict";
 
     var module = angular.module("app.notification");
@@ -9,25 +9,23 @@
 
     function TopicGenerator() {
         /**
-         * @function generate
-         * @param {heterogeneous array} model
-         * @returns {string} topic
+         * @constructor
+         * @author touhid.alam <tua@selise.ch>
+         * @param  {Array} seperator [description]
          */
-        var constructor = function(seperator) {
+        var constructor = function (seperator) {
             if (!seperator)
                 throw "{TopicGenerator.constructor} undefined seperator";
 
             this.seperator = seperator;
-        }
-
-				/**
-				 * generates an aggregate topic based on model
-				 * @method generate
-				 * @author touhid.alam <tua@selise.ch>
-				 * @param  {Array} model [description]
-				 * @return {string}       [description]
-				 */
-        constructor.prototype.generate = function(model) {
+        };
+        /**
+         * generates an aggregate topic based on model
+         * @author touhid.alam <tua@selise.ch>
+         * @param  {Array} model [description]
+         * @return {string} [description]
+         */
+        constructor.prototype.generate = function (model) {
             if (!model)
                 throw "{TopicGenerator.generate} undefined model";
 
@@ -40,14 +38,12 @@
 
             return model.join(this.seperator[0]);
         };
-
-				/**
+        /**
          * normalizes the model into array of arrays respecting the weight, if specified
-         * @method normalize
          * @author touhid.alam <tua@selise.ch>
-         * @param  {object}  model  [description]
-         * @param  {array}  weight [description]
-         * @return {array}         [description]
+         * @param  {object} model [description]
+         * @param  {Array} weight [description]
+         * @return {object} [description]
          */
         this.normalize = function (model, weight) {
             var normalizedModel = [];
@@ -56,7 +52,8 @@
                 for (var i = 0; i < weight.length; i++)
                     normalizedModel.push(model[weight[i]]);
             else
-                for (var i = 0; i < Object.keys(model).length; i++)
+                for (var i = 0; i < Object.keys(model)
+                    .length; i++)
                     normalizedModel.push(Object.keys(model[i]));
 
             return normalizedModel;
@@ -64,4 +61,5 @@
 
         return constructor;
     }
-}).apply(this);
+})
+.apply(this);

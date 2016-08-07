@@ -19,12 +19,11 @@
         InMemoryStorage,
         SignalR,
         TopicGenerator) {
-
         /**
          * @constructor
          * @author touhid.alam <tua@selise.ch>
-         * @param  {string}    serviceEndPoint [description]
-         * @param  {object}    config          [description]
+         * @param  {string} serviceEndPoint [description]
+         * @param  {object} config [description]
          */
         var constructor = function (serviceEndPoint, config) {
             if (!serviceEndPoint)
@@ -61,6 +60,11 @@
             this.ready = false;
         };
 
+        /**
+         * initializes WebSocket and registers to onmessage event
+         * @author touhid.alam <tua@selise.ch>
+         * @return {Promise} [description]
+         */
         constructor.prototype.initialize = function () {
             if (this.ready)
                 this.deferral.resolve();
@@ -74,8 +78,9 @@
                         var topic = this.topicGenerator.generate(this.topicGenerator.normalize(model, this.weight));
                         var callbacks = this.storage.read(topic);
 
+                        //TODO invoke callback with model generated from event.data
                         for (var i = 0; i < Object.keys(callbacks).length; i++)
-                            callbacks[Object.keys[i]].apply(this);
+                            callbacks[Object.keys[i]]();
 
                     }.bind(this);
                     this.ready = true;
@@ -84,14 +89,12 @@
 
             return this.deferral.promise;
         };
-
         /**
          * generates a topic from model respecing the weight, registers its callback, sends the translated model to server
-         * @method subscribe
          * @author touhid.alam <tua@selise.ch>
-         * @param  {object}   model    [description]
+         * @param  {object} model [description]
          * @param  {function} callback [description]
-         * @return {string}            [description]
+         * @return {string} [description]
          */
         constructor.prototype.subscribe = function (model, callback) {
             if (!model)
@@ -107,14 +110,14 @@
             this.storage.write(subscriptionToken, callback);
             this.signalr.invoke(this.remoteActionMap.subscribe, formatProvider.outgoing(model));
             this.storage.write(timestamp, formatProvider.outgoing(model));
-        };
 
+            return subscriptionToken;
+        };
         /**
          * unsubscribes from the registered topic
-         * @method unsubscribe
          * @author touhid.alam <tua@selise.ch>
-         * @param  {string}    subscriptionToken [description]
-         * @return {boolean}                      [description]
+         * @param  {string} subscriptionToken [description]
+         * @return {boolean} [description]
          */
         constructor.prototype.unsubscribe = function (subscriptionToken) {
             if (!subscriptionToken)
@@ -126,4 +129,5 @@
 
         return constructor;
     }
-}).apply(this);
+})
+.apply(this);

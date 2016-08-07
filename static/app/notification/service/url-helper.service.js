@@ -10,11 +10,10 @@
     function constructor() {
         /**
          * encodes a new query
-         * @method encodeQuery
          * @author touhid.alam <tua@selise.ch>
-         * @param  {string}    attribute [description]
-         * @param  {string}    value     [description]
-         * @return {string}              [description]
+         * @param  {string} attribute [description]
+         * @param  {string} value [description]
+         * @return {string} [description]
          */
         this.encodeQuery = function (attribute, value) {
             value = "object" === typeof value ?
@@ -22,13 +21,11 @@
                 window.encodeURIComponent(value);
             return [attribute, value].join("=");
         };
-
         /**
          * composes query string from attributes and corresponding values
-         * @method composeQueryString
          * @author touhid.alam <tua@selise.ch>
-         * @param  {object}           queries [description]
-         * @return {string}                   [description]
+         * @param  {object} queries [description]
+         * @return {string} [description]
          */
         this.composeQueryString = function (queries) {
             if (!queries)
@@ -44,25 +41,25 @@
 
         /**
          * [composeURL description]
-         * @method composeURL
          * @author touhid.alam <tua@selise.ch>
-         * @param  {string}   url         [description]
-         * @param  {string}   queryString [description]
-         * @return {string}               [description]
+         * @param  {string} url [description]
+         * @param  {string} queryString [description]
+         * @return {string} [description]
          */
         this.composeURL = function (url, queryString) {
             return queryString ? url + "?" + queryString : url;
         };
 
-				/**
-				 * [isHTTPS description]
-				 * @method isHTTPS
-				 * @author touhid.alam <tua@selise.ch>
-				 * @param  {string}  url [description]
-				 * @return {Boolean}     [description]
-				 */
+        /**
+         * [isHTTPS description]
+         * @author touhid.alam <tua@selise.ch>
+         * @param  {string} url [description]
+         * @return {boolean} [description]
+         */
         this.isHTTPS = function (url) {
-            return new URL(url).protocol.indexOf("https") === 0;
+            return new URL(url)
+                .protocol.indexOf("https") === 0;
         };
     }
-}).apply(this);
+})
+.apply(this);

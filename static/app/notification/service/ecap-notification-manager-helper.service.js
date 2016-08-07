@@ -46,12 +46,10 @@
                         });
             return aoo;
         };
-
         /**
          * creates a new instance of NotificationManager for ecapNotificationManagerHelper
-         * @method createNotificationManager
          * @author touhid.alam <tua@selise.ch>
-         * @return {NorificationManager}                  [description]
+         * @return {NotificationManager} [description]
          */
         this.createNotificationManager = function () {
             return new NotificationManager("http://172.16.0.223/Selise.AppSuite.Notifier.NotifierServer", {

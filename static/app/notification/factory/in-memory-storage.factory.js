@@ -8,11 +8,10 @@
     InMemoryStorage.$inject = [];
 
     function InMemoryStorage() {
-
         /**
          * @constructor
          * @author touhid.alam <tua@selise.ch>
-         * @param  {Array}    seperator [description]
+         * @param  {Array} seperator [description]
          */
         var constructor = function (seperator) {
             if (!seperator)
@@ -21,27 +20,23 @@
             this.seperator = seperator;
             this.memory = {};
         };
-
         /**
          * reads item pointed by the location
-         * @method read
          * @author touhid.alam <tua@selise.ch>
          * @param  {string} location [description]
-         * @return {[type]}          [description]
+         * @return {[type]} [description]
          */
         constructor.prototype.read = function (location) {
             return this.worker.read(
                 location.split(this.seperator[0]),
                 this.memory);
         };
-
         /**
          * writes item in location
-         * @method write
          * @author touhid.alam <tua@selise.ch>
          * @param  {string} location [description]
-         * @param  {[type]} value    [description]
-         * @return {[type]}          [description]
+         * @param  {object} value [description]
+         * @return {[type]} [description]
          */
         constructor.prototype.write = function (location, value) {
             return this.worker.write(
@@ -49,13 +44,11 @@
                 this.memory,
                 value);
         };
-
         /**
          * removes the leaf node of the location
-         * @method prune
          * @author touhid.alam <tua@selise.ch>
          * @param  {string} location [description]
-         * @return {boolean}          [description]
+         * @return {boolean} [description]
          */
         constructor.prototype.prune = function (location) {
             if (location.indexOf(this.seperator[0]) === -1)

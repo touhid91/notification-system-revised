@@ -19,8 +19,8 @@
         /**
          * @constructor
          * @author touhid.alam <tua@selise.ch>
-         * @param  {string}    serviceEndPoint [description]
-         * @param  {string}    hub             [description]
+         * @param  {string} serviceEndPoint [description]
+         * @param  {string} hub [description]
          */
         var constructor = function (serviceEndPoint, hub) {
             if (!serviceEndPoint)
@@ -37,12 +37,10 @@
                 transport: "webSockets"
             };
         };
-
         /**
          * issues a new negotiate HTTP request
-         * @method negotiate
          * @author touhid.alam <tua@selise.ch>
-         * @return {promise}  [description]
+         * @return {Promise} [description]
          */
         constructor.prototype.negotiate = function () {
             var url = this.serviceEndPoint + "/signalr/negotiate";
@@ -62,13 +60,11 @@
                 deferral.resolve(this);
             }
         };
-
         /**
          * establishes connection with the web socket server, initializes the WebSocket object
-         * @method connect
          * @author touhid.alam <tua@selise.ch>
          * @param  {string|Array} protocol [description]
-         * @return {SignalR}          [description]
+         * @return {SignalR} [description]
          */
         constructor.prototype.connect = function (protocol) {
             var url = urlHelper.isHTTPS(this.serviceEndPoint) ? "wss:" : "ws:" + this.serviceEndPoint.slice(this.serviceEndPoint.indexOf("//")) + "/signalr/connect",
@@ -82,11 +78,10 @@
 
         /**
          * invokes an action defined on server with the specified message as parameter
-         * @method invoke
          * @author touhid.alam <tua@selise.ch>
-         * @param  {string} action  [description]
+         * @param  {string} action [description]
          * @param  {object} message [description]
-         * @return {SignalR}         [description]
+         * @return {SignalR} [description]
          */
         constructor.prototype.invoke = function (action, message) {
             if (!action)
@@ -99,6 +94,7 @@
             return this;
         };
 
-				return constructor;
+        return constructor;
     }
-}).apply(this);
+})
+.apply(this);
