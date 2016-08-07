@@ -33,8 +33,8 @@
 
             var attributes = Object.keys(queries),
                 encodedQueries = [];
-            for (var i = 0; i < keys.length; i++)
-                encodedQueries.push(this.encodeQuery(keys[i], queries[keys[i]]));
+            for (var i = 0; i < attributes.length; i++)
+                encodedQueries.push(this.encodeQuery(attributes[i], queries[attributes[i]]));
 
             return encodedQueries.join("&");
         };

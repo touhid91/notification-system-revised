@@ -72,7 +72,7 @@
             this.signalr
                 .negotiate()
                 .then(function () {
-                    this.signalr.connect(13);
+                    this.signalr.connect();
                     this.signalr.webSocket.onmessage = function (event) {
                         var model = this.formatProvider.incoming(signalRMessageTranslator.deserialize(event.data));
                         var topic = this.topicGenerator.generate(this.topicGenerator.normalize(model, this.weight));

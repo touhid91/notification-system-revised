@@ -17,7 +17,7 @@
             }, callback);
         };
 
-        this.subscribeSingle = function (entityName, id, action, callback) {
+        this.subscribeSingle = function (context, id, action, callback) {
             return this.notificationManager.subscribe({
                 context: context,
                 id: id,
@@ -25,7 +25,7 @@
             }, callback);
         };
 
-        this.subscribeGroup = function (entityName, id, action, callback) {
+        this.subscribeGroup = function (context, id, action, callback) {
             return this.notificationManager.subscribe({
                 context: context,
                 id: id,
