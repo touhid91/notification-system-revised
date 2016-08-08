@@ -8,6 +8,7 @@
     constructor.$inject = [];
 
     function constructor() {
+
         /**
          * encodes a new query
          * @author touhid.alam <tua@selise.ch>
@@ -21,6 +22,7 @@
                 window.encodeURIComponent(value);
             return [attribute, value].join("=");
         };
+
         /**
          * composes query string from attributes and corresponding values
          * @author touhid.alam <tua@selise.ch>
@@ -61,5 +63,4 @@
                 .protocol.indexOf("https") === 0;
         };
     }
-})
-.apply(this);
+}).apply(this);

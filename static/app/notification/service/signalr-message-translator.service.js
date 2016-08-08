@@ -1,5 +1,4 @@
 (function () {
-
     "use strict";
 
     var module = angular.module("app.notification");
@@ -10,6 +9,7 @@
 
     function constructor() {
         this.messageCount = 0;
+
         /**
          * serializes payload into format accepted by the SignalR server
          * @author touhid.alam <tua@selise.ch>
@@ -37,5 +37,4 @@
             };
         };
     }
-
 }).apply(this);

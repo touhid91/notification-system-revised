@@ -34,7 +34,6 @@
                             "Context": model.context,
                             "ActionName": model.action[j]
                         });
-
                 else aoo.push({
                     "Context": model.context,
                 });
@@ -46,7 +45,6 @@
                             "Value": model.id,
                             "ActionName": model.action[i]
                         });
-
                 else
                     for (var i = 0; i < model.id.length; i++)
                         if (model.action && model.action.length > 0)
@@ -107,6 +105,4 @@
             return model;
         };
     }
-
-})
-.apply(this);
+}).apply(this);

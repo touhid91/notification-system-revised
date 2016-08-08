@@ -8,6 +8,7 @@
     TopicGenerator.$inject = [];
 
     function TopicGenerator() {
+
         /**
          * @constructor
          * @author touhid.alam <tua@selise.ch>
@@ -19,6 +20,7 @@
 
             this.seperator = seperator;
         };
+
         /**
          *
          * @author touhid.alam <tua@selise.ch>
@@ -38,6 +40,7 @@
 
             return model.join(this.seperator[0]);
         };
+
         /**
          * normalizes the model into array of arrays respecting the weight, if specified
          * @author touhid.alam <tua@selise.ch>
@@ -58,9 +61,8 @@
             }
 
             return normalizedModel;
-        };
+        }
 
         return constructor;
     }
-})
-.apply(this);
+}).apply(this);

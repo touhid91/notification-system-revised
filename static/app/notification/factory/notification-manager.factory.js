@@ -15,14 +15,8 @@
         "TopicGenerator"
     ];
 
-    function NotificationManager(
-        $interval,
-        $q,
-        CONSTANT,
-        InMemoryStorage,
-        SignalR,
-        signalRMessageTranslator,
-        TopicGenerator) {
+    function NotificationManager($interval, $q, CONSTANT, InMemoryStorage, SignalR, signalRMessageTranslator, TopicGenerator) {
+
         /**
          * @constructor
          * @author touhid.alam <tua@selise.ch>
@@ -47,14 +41,15 @@
             if (config.formatProvider) {
                 if (!config.formatProvider.incoming || !config.formatProvider.outgoing || "function" !== typeof config.formatProvider.incoming || "function" !== typeof config.formatProvider.outgoing)
                     throw "{NotificationManager.constructor} illegal formatProvider in config. undefined incoming and outgoing functions";
-            } else config.formatProvider = {
-                incoming: function (data) {
-                    return data;
-                },
-                outgoing: function (data) {
-                    return data;
-                }
-            };
+            } else
+                config.formatProvider = {
+                    incoming: function (data) {
+                        return data;
+                    },
+                    outgoing: function (data) {
+                        return data;
+                    }
+                };
 
             this.signalr = new SignalR(serviceEndPoint, config.hub);
             this.storage = new InMemoryStorage(CONSTANT.SEPERATOR);
@@ -73,13 +68,11 @@
             if (this.ready)
                 this.deferral.resolve();
 
-            this.signalr
-                .negotiate()
-                .then(function () {
-                    this.signalr.connect();
-                    
-                    this.signalr.webSocket.onmessage = function (event) {
-                        if (event.data === "{}" || JSON.parse(event.data).M.length < 1)
+            this.signalr.negotiate().then(function () {
+                this.signalr.connect();
+
+                this.signalr.webSocket.onmessage = function (event) {
+                        if (Object.keys(JSON.parse('event.data')).length || JSON.parse(event.data).M.length < 1)
                             return;
 
                         var model = this.config.formatProvider.incoming(signalRMessageTranslator.deserialize(event.data));
@@ -92,17 +85,19 @@
                         for (var i = 0; i < keys.length; i++)
                             callbacks[keys[i]]();
 
-                    }.bind(this);
+                    }
+                    .bind(this);
 
-                    this.signalr.webSocket.onopen = function () {
-                        this.ready = true;
-                        this.deferral.resolve();
-                    }.bind(this);
+                this.signalr.webSocket.onopen = function () {
+                    this.ready = true;
+                    this.deferral.resolve();
+                }.bind(this);
 
-                }.bind(this));
+            }.bind(this));
 
             return this.deferral.promise;
         };
+
         /**
          * generates a topic from model respecing the weight, registers its callback, sends the translated model to server
          * @author touhid.alam <tua@selise.ch>
@@ -127,6 +122,7 @@
 
             return subscriptionToken;
         };
+
         /**
          * unsubscribes from the registered topic
          * @author touhid.alam <tua@selise.ch>
@@ -144,5 +140,4 @@
 
         return constructor;
     }
-})
-.apply(this);
+}).apply(this);
