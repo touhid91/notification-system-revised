@@ -76,7 +76,7 @@
 
             this.webSocket = new WebSocket(url, protocol);
 
-            return this;,
+            return this;
         };
 
         /**

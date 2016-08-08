@@ -5,36 +5,38 @@
 
     module.service("ecapNotificationManager", constructor);
 
-    constructor.$inject = ["ecapNotificationManagerHelper"];
+    constructor.$inject = ["ecapNotificationManagerFactory"];
 
-    function constructor(ecapNotificationManagerHelper) {
-        this.notificationManager = ecapNotificationManagerHelper.createNotificationManager();
+    function constructor(ecapNotificationManagerFactory) {
+        var notificationManager = ecapNotificationManagerFactory.create();
+
+        this.initialize = notificationManager.initialize.bind(notificationManager);
 
         this.subscribeAll = function (context, action, callback) {
-            return this.notificationManager.subscribe({
+            return notificationManager.subscribe({
                 context: context,
-                action: ecapNotificationManagerHelper.populateActions(action)
+                action: ecapNotificationManagerFactory.populateActions(action)
             }, callback);
         };
 
         this.subscribeSingle = function (context, id, action, callback) {
-            return this.notificationManager.subscribe({
+            return notificationManager.subscribe({
                 context: context,
                 id: id,
-                action: ecapNotificationManagerHelper.populateActions(action)
+                action: ecapNotificationManagerFactory.populateActions(action)
             }, callback);
         };
 
         this.subscribeGroup = function (context, id, action, callback) {
-            return this.notificationManager.subscribe({
+            return notificationManager.subscribe({
                 context: context,
                 id: id,
-                action: ecapNotificationManagerHelper.populateActions(action)
+                action: ecapNotificationManagerFactory.populateActions(action)
             }, callback);
         };
 
         this.unsubscribe = function (topic) {
-            return this.notificationManager.unsubscribe(topic);
+            return notificationManager.unsubscribe(topic);
         };
     }
 }).apply(this);

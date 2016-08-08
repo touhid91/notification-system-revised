@@ -70,32 +70,35 @@
 
             this.signalr.negotiate().then(function () {
                 this.signalr.connect();
-
-                this.signalr.webSocket.onmessage = function (event) {
-                        if (Object.keys(JSON.parse('event.data')).length || JSON.parse(event.data).M.length < 1)
-                            return;
-
-                        var model = this.config.formatProvider.incoming(signalRMessageTranslator.deserialize(event.data));
-
-                        var topic = this.topicGenerator.generate(this.topicGenerator.normalize(model, this.weight));
-                        var callbacks = this.storage.read(topic);
-
-                        //TODO invoke callback with model generated from event.data
-                        var keys = Object.keys(callbacks);
-                        for (var i = 0; i < keys.length; i++)
-                            callbacks[keys[i]]();
-
-                    }
-                    .bind(this);
-
-                this.signalr.webSocket.onopen = function () {
-                    this.ready = true;
-                    this.deferral.resolve();
-                }.bind(this);
-
+                this.signalr.webSocket.onmessage = this.onSocketMessage.bind(this);
+                this.signalr.webSocket.onopen = this.onSocketOpen.bind(this);
             }.bind(this));
 
             return this.deferral.promise;
+        };
+
+        constructor.prototype.onSocketMessage = function (event) {
+            if (Object.keys(JSON.parse(event.data)).length < 1 || JSON.parse(event.data).M.length < 1)
+                return;
+
+            var response = signalRMessageTranslator.deserialize(event.data);
+
+            if (response.NotificationType !== "FilterSpecificReceiverType")
+                return;
+
+            var model = this.config.formatProvider.incoming(response.action);
+            var topic = this.topicGenerator.generate(this.topicGenerator.normalize(model, this.weight));
+            var callbacks = this.storage.read(topic);
+
+            //TODO invoke callback with model generated from event.data
+            var keys = Object.keys(callbacks);
+            for (var i = 0; i < keys.length; i++)
+                callbacks[keys[i]]();
+        };
+
+        constructor.prototype.onSocketOpen = function () {
+            this.ready = true;
+            this.deferral.resolve();
         };
 
         /**

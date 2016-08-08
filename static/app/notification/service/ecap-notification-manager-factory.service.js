@@ -3,11 +3,29 @@
 
     var module = angular.module("app.notification");
 
-    module.service("ecapNotificationManagerHelper", constructor);
+    module.service("ecapNotificationManagerFactory", constructor);
 
     constructor.$inject = ["NotificationManager"];
 
     function constructor(NotificationManager) {
+
+        /**
+         * factory method : creates a new instance of NotificationManager
+         * @author touhid.alam <tua@selise.ch>
+         * @return {NotificationManager} [description]
+         */
+        this.create = function () {
+            return new NotificationManager("http://172.16.0.223/Selise.AppSuite.Notifier.NotifierServer", {
+                hub: this.hub,
+                remoteActionMap: this.remoteActionMap,
+                weight: this.weight,
+                formatProvider: {
+                    incoming: this.incomingFormatProvider,
+                    outgoing: this.outgoingFormatProvider
+                }
+            });
+        };
+
         this.hub = "NotifierServerHub";
         this.remoteActionMap = {
             subscribe: "Subscribe",
@@ -17,11 +35,6 @@
 
         this.incomingFormatProvider = function (model) {
             debugger;
-            var notificationTypes = {
-                all: "BroadcastReceiverType",
-                filterSpecific: "FilterSpecificReceiverType",
-                userSpecific: "UserSpecificReceiverType"
-            };
         };
 
         this.outgoingFormatProvider = function (model) {
@@ -60,22 +73,6 @@
                             "Value": model.id[i],
                         });
             return aoo;
-        };
-        /**
-         * creates a new instance of NotificationManager for ecapNotificationManagerHelper
-         * @author touhid.alam <tua@selise.ch>
-         * @return {NotificationManager} [description]
-         */
-        this.createNotificationManager = function () {
-            return new NotificationManager("http://172.16.0.223/Selise.AppSuite.Notifier.NotifierServer", {
-                hub: this.hub,
-                remoteActionMap: this.remoteActionMap,
-                weight: this.weight,
-                formatProvider: {
-                    incoming: this.incomingFormatProvider,
-                    outgoing: this.outgoingFormatProvider
-                }
-            });
         };
 
         this.populateActions = function (action) {
