@@ -34,7 +34,16 @@
         this.weight = ["context", "id", "action"];
 
         this.incomingFormatProvider = function (model) {
-            debugger;
+            return model.map(function (item) {
+                //TODO handle userspecific and brodcast events
+                if (item.NotificationType === "BroadcastReceiverType" || item.NotificationType === "UserSpecificReceiverType")
+                    return item;
+                return {
+                    action: item.SubscriptionFilters[0].ActionName,
+                    context: item.SubscriptionFilters[0].Context,
+                    id: item.SubscriptionFilters[0].Value
+                };
+            });
         };
 
         this.outgoingFormatProvider = function (model) {
@@ -72,7 +81,10 @@
                             "Context": model.context,
                             "Value": model.id[i],
                         });
-            return aoo;
+                        // return aoo.map(function(item){return {"SubscriptionFilters": item}});
+            return {
+                "SubscriptionFilters": aoo
+            };
         };
 
         this.populateActions = function (action) {

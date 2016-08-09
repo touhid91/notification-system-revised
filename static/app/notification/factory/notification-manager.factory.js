@@ -78,22 +78,22 @@
         };
 
         constructor.prototype.onSocketMessage = function (event) {
-            if (Object.keys(JSON.parse(event.data)).length < 1 || JSON.parse(event.data).M.length < 1)
+            if (Object.keys(JSON.parse(event.data)).length < 1 || !JSON.parse(event.data).M || JSON.parse(event.data).M.length < 1)
                 return;
 
             var response = signalRMessageTranslator.deserialize(event.data);
 
-            if (response.NotificationType !== "FilterSpecificReceiverType")
-                return;
-
-            var model = this.config.formatProvider.incoming(response.action);
+            var model = this.config.formatProvider.incoming(response.message)[0];
             var topic = this.topicGenerator.generate(this.topicGenerator.normalize(model, this.weight));
             var callbacks = this.storage.read(topic);
 
-            //TODO invoke callback with model generated from event.data
+            var invokeValue = {
+                key: response.message.ResponseKey,
+                value: response.message.ResponseValue
+            };
             var keys = Object.keys(callbacks);
             for (var i = 0; i < keys.length; i++)
-                callbacks[keys[i]]();
+                callbacks[keys[i]](invokeValue);
         };
 
         constructor.prototype.onSocketOpen = function () {

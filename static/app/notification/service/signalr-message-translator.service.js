@@ -20,10 +20,10 @@
          */
         this.serialize = function (hub, action, message) {
             return {
-                A: action,
+                A: [JSON.stringify(message)],
                 I: this.messageCount++,
                 H: hub,
-                M: [JSON.stringify(message)]
+                M: action
             };
         };
 
@@ -31,9 +31,9 @@
             var data = JSON.parse(message).M[0];
 
             return {
-                action: data.A,
+                action: data.M,
                 hub: data.H,
-                message: data.M
+                message: data.A
             };
         };
     }

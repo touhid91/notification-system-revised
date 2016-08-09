@@ -12,7 +12,7 @@
         ecapNotificationManager
             .initialize()
             .then(function () {
-                var sid = ecapNotificationManager.subscribeAll("person", "*", function () {
+                var sid = ecapNotificationManager.subscribeSingle("person","123","*", function () {
                     console.log("person updated");
                 });
                 // ecapNotificationManager.unsubscribe(sid);
