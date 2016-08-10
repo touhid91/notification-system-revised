@@ -38,7 +38,9 @@
                     else
                         model[i] = model[i].join(this.seperator[1]);
 
-            return model.join(this.seperator[0]);
+            return model.filter(function (item) {
+                return item !== undefined && item !== null;
+            }).join(this.seperator[0]);
         };
 
         /**

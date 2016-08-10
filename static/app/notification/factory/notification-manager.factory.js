@@ -35,8 +35,8 @@
             if (!config.remoteActionMap.subscribe || !config.remoteActionMap.unsubscribe)
                 throw "{NotificationManager.constructor} illegal remoteActionMap in config";
             if ("function" === typeof config.weight) {
-                this.formatProvider = config.weight;
-                this.weight = undefined;
+                config.formatProvider = config.weight;
+                config.weight = undefined;
             }
             if (config.formatProvider) {
                 if (!config.formatProvider.incoming || !config.formatProvider.outgoing || "function" !== typeof config.formatProvider.incoming || "function" !== typeof config.formatProvider.outgoing)
@@ -83,13 +83,14 @@
 
             var response = signalRMessageTranslator.deserialize(event.data);
 
+            //TODO remove arraifying response message from server side
             var model = this.config.formatProvider.incoming(response.message)[0];
-            var topic = this.topicGenerator.generate(this.topicGenerator.normalize(model, this.weight));
+            var topic = this.topicGenerator.generate(this.topicGenerator.normalize(model, this.config.weight));
             var callbacks = this.storage.read(topic);
 
             var invokeValue = {
-                key: response.message.ResponseKey,
-                value: response.message.ResponseValue
+                key: response.message[0].ResponseKey,
+                value: response.message[0].ResponseValue
             };
             var keys = Object.keys(callbacks);
             for (var i = 0; i < keys.length; i++)
@@ -114,7 +115,7 @@
             if (!callback || "function" !== typeof callback)
                 throw "{NotificationManager.subscribe} illegal callback";
 
-            var topic = this.topicGenerator.generate(this.topicGenerator.normalize(model, this.weight));
+            var topic = this.topicGenerator.generate(this.topicGenerator.normalize(model, this.config.weight));
             var timestamp = Date.now();
 
             var subscriptionToken = [topic, timestamp].join(CONSTANT.SEPERATOR[0]);

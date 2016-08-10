@@ -39,9 +39,9 @@
                 if (item.NotificationType === "BroadcastReceiverType" || item.NotificationType === "UserSpecificReceiverType")
                     return item;
                 return {
-                    action: item.SubscriptionFilters[0].ActionName,
                     context: item.SubscriptionFilters[0].Context,
-                    id: item.SubscriptionFilters[0].Value
+                    id: item.SubscriptionFilters[0].Value,
+                    action: item.SubscriptionFilters[0].ActionName
                 };
             });
         };
@@ -59,7 +59,7 @@
                 else aoo.push({
                     "Context": model.context,
                 });
-            else if ("string" === typeof model.id || "number" === typeof model.id)
+            else if ("string" === typeof model.id || "number" === typeof model.id) {
                 if (model.action && model.action.length > 0)
                     for (var i = 0; i < model.action.length; i++)
                         aoo.push({
@@ -67,21 +67,21 @@
                             "Value": model.id,
                             "ActionName": model.action[i]
                         });
-                else
-                    for (var i = 0; i < model.id.length; i++)
-                        if (model.action && model.action.length > 0)
-                            for (var j = 0; j < model.action.length; j++)
-                                aoo.push({
-                                    "Context": model.context,
-                                    "Value": model.id[i],
-                                    "ActionName": model.action[j]
-                                });
+            } else
+                for (var i = 0; i < model.id.length; i++)
+                    if (model.action && model.action.length > 0)
+                        for (var j = 0; j < model.action.length; j++)
+                            aoo.push({
+                                "Context": model.context,
+                                "Value": model.id[i],
+                                "ActionName": model.action[j]
+                            });
 
-                        else aoo.push({
-                            "Context": model.context,
-                            "Value": model.id[i],
-                        });
-                        // return aoo.map(function(item){return {"SubscriptionFilters": item}});
+                    else aoo.push({
+                        "Context": model.context,
+                        "Value": model.id[i],
+                    });
+                    // return aoo.map(function(item){return {"SubscriptionFilters": item}});
             return {
                 "SubscriptionFilters": aoo
             };
