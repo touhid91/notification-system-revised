@@ -54,7 +54,8 @@
                     for (var j = 0; j < model.action.length; j++)
                         aoo.push({
                             "Context": model.context,
-                            "ActionName": model.action[j]
+                            "ActionName": model.action[j],
+                            "Value": ""
                         });
                 else aoo.push({
                     "Context": model.context,
@@ -79,6 +80,7 @@
 
                     else aoo.push({
                         "Context": model.context,
+                        "ActionName": "",
                         "Value": model.id[i],
                     });
                     // return aoo.map(function(item){return {"SubscriptionFilters": item}});

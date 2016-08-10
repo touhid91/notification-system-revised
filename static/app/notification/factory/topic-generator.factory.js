@@ -39,7 +39,7 @@
                         model[i] = model[i].join(this.seperator[1]);
 
             return model.filter(function (item) {
-                return item !== undefined && item !== null;
+                return item !== undefined && item !== null && item !== "";
             }).join(this.seperator[0]);
         };
 
