@@ -12,7 +12,7 @@
         ecapNotificationManager
             .initialize()
             .then(function () {
-                var sid = ecapNotificationManager.subscribeSingle("person", "123", "create", function (message) {
+                var sid = ecapNotificationManager.subscribeSingle("person", "f78e646fee5f4eecbb5da9ef23068f0e", "create", function (message) {
                     console.log("subscribeSingle person", message);
                 });
 
@@ -20,26 +20,15 @@
                     console.log("subscribeAll person", message);
                 });
 
-                var sid3 = ecapNotificationManager.subscribeGroup("person", ["1", "2", "3", "123"], "*", function (message) {
-                    console.log("subscribeGroup person", message);
-                });
-                ecapNotificationManager.unsubscribe(sid);
-                ecapNotificationManager.unsubscribe(sid2);
-                ecapNotificationManager.unsubscribe(sid3);
-
-                var sid4 = ecapNotificationManager.subscribeSingle("person", "123", "create", function (message) {
-                    console.log("subscribeSingle person", message);
-                });
-
-                var sid5 = ecapNotificationManager.subscribeAll("person", "modify", function (message) {
-                    console.log("subscribeAll person", message);
-                });
-
-                var sid6 = ecapNotificationManager.subscribeGroup("person", ["1", "2", "3", "123"], "*", function (message) {
-                    console.log("subscribeGroup person", message);
-                });
-
-                console.log(sid, sid2, sid3, sid4, sid5, sid6);
+                var sid3 = ecapNotificationManager.subscribeGroup("person", [
+                    "107586a5ca1049cbad761f0cec54f742",
+                    "18e8b9466f8c41d29e48437262b41d76",
+                    "f78e646fee5f4eecbb5da9ef23068f0e",
+                    "28874e1af4264897bc669a5a56c052d4"
+                ], "*",
+                    function (message) {
+                        console.log("subscribeGroup person", message);
+                    });
             });
     }
 }).apply(this);

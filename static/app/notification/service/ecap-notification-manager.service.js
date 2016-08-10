@@ -15,6 +15,7 @@
         this.subscribeAll = function (context, action, callback) {
             return notificationManager.subscribe({
                 context: context,
+                id: "*",
                 action: ecapNotificationManagerFactory.populateActions(action)
             }, callback);
         };

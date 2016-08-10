@@ -88,6 +88,10 @@
             var topic = this.topicGenerator.generate(this.topicGenerator.normalize(model, this.config.weight));
             var callbacks = this.storage.read(topic);
 
+            model.id = "*";
+            var topic = this.topicGenerator.generate(this.topicGenerator.normalize(model, this.config.weight));
+            callbacks[this.storage.read(topic))];
+
             var invokeValue = {
                 key: response.message[0].ResponseKey,
                 value: response.message[0].ResponseValue
